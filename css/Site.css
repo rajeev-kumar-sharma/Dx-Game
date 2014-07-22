@@ -1,0 +1,25 @@
+body {
+    background-color: #333333;
+    font-family: Arial;
+    font-size: 14px;
+}
+
+header {
+    
+}
+
+h2 {
+    color: #FFB800;
+}
+
+.container {
+    max-width: 982px;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+#game {
+    border: 1px solid #ff6a00;
+    margin: auto;
+}
