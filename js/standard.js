@@ -16,7 +16,7 @@ function Stricker(x,y,w,h)
     this.h = h;
     this.x = x;
     this.y = y;
-    this.color = 'Yellow';
+    this.color = '#FFB800';
 }
 function Bricks(w,h,r,c)
 {
@@ -64,9 +64,15 @@ function drawGame()
         }    
     }
     // stricker
-    ctx.fillStyle = oStricker.color;
     ctx.beginPath();
     ctx.rect(oStricker.x, oStricker.y, oStricker.w, oStricker.h);
+    /*var grd = ctx.createLinearGradient((oStricker.x),0,(oStricker.x + 148),0);
+    grd.addColorStop(0,'#ff6a00');
+    grd.addColorStop(0.5,'#FFF');
+    grd.addColorStop(0.75,'#FFF');
+    grd.addColorStop(1,'#ff6a00')
+    ctx.fillStyle = grd;*/
+    ctx.fillStyle = oStricker.color;
     ctx.closePath();
     ctx.fill();
     // ball motion
