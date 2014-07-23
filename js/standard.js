@@ -121,12 +121,27 @@ $(function ()
     oBall = new Ball((width / 2), 565, 0.5, -2, 10);
     oBricks = new Bricks((width / 10), 40, 8, 10);
     oBricks.objs = new Array(oBricks.r);
+    // filling brocks    
     for (i = 0; i < oBricks.r; i++)
     {
         oBricks.objs[i] = new Array(oBricks.c);
         for (j = 0; j < oBricks.c; j++)
         {
             oBricks.objs[i][j] = 1;
+        }
+    }
+    // random delete
+    for (i = 0; i < 40; i++)
+    {
+        var rRow = Math.floor(Math.random() * 8);
+        var rCol = Math.floor(Math.random() * 10);
+        if (oBricks.objs[rRow][rCol] == 1)
+        {
+            oBricks.objs[rRow][rCol] = 0;
+        }
+        else
+        {
+            i--;
         }
     }
     //drawGame();
