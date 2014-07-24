@@ -2,6 +2,7 @@ var iStart = 0;
 var canvas, ctx;
 var width, height;
 var oBall, oBricks, oStricker;
+var left = false, right = false, len1 = true, len2 = true, good = true, bad = true;
 function Ball(x,y,dx,dy,r)
 {
     this.x = x;
@@ -37,7 +38,7 @@ function clear()
 }
 function drawGame()
 {
-    // clear canvas every time
+    // clear canvas every time so that a good look is gained and it is so fast 10ms
     clear();
     // ball
     ctx.fillStyle = '#FFF';
@@ -51,12 +52,24 @@ function drawGame()
     {
         for(j=0;j<oBricks.c;j++)
         {
-            if(oBricks.objs[i][j]==1)
+            if(oBricks.objs[i][j]==1 || oBricks.objs[i][j]==2 || oBricks.objs[i][j]==3)
             {
                 ctx.beginPath();
                 ctx.rect(j*(oBricks.w),i*(oBricks.h),oBricks.w,oBricks.h); 
                 ctx.closePath();
                 ctx.lineWidth = 4;
+                if(oBricks.objs[i][j]==2)                
+                {
+                    ctx.fillStyle = 'green';
+                }
+                else if(oBricks.objs[i][j]==3)                
+                {
+                    ctx.fillStyle = '#f00';
+                }
+                else                
+                {
+                    ctx.fillStyle = oBricks.color;
+                }                                
                 ctx.strokeStyle = '#333333';
                 ctx.fill();
                 ctx.stroke();
@@ -64,6 +77,14 @@ function drawGame()
         }    
     }
     // stricker
+    if (left && (oStricker.x > 0))
+    {
+        oStricker.x -= 10;
+    }
+    if (right && ((oStricker.x + oStricker.w) < ctx.canvas.width))
+    {
+        oStricker.x += 10;
+    }
     ctx.beginPath();
     ctx.rect(oStricker.x, oStricker.y, oStricker.w, oStricker.h);
     /*var grd = ctx.createLinearGradient((oStricker.x),0,(oStricker.x + 148),0);
@@ -87,6 +108,26 @@ function drawGame()
     {
         oBricks.objs[iRow][iCol] = 0;
         oBall.dy = -oBall.dy;
+    }
+    if(oBall.y < oBricks.r*iRowH && iRow>=0 && iCol>=0 && oBricks.objs[iRow][iCol] == 2)    
+    {
+        oBricks.objs[iRow][iCol] = 0;
+        oBall.dy = -oBall.dy;
+        if (len1)
+        {            
+            len1 = false;
+            oStricker.w *= 2;            
+        }
+    }
+    if(oBall.y < oBricks.r*iRowH && iRow>=0 && iCol>=0 && oBricks.objs[iRow][iCol] == 3)    
+    {
+        oBricks.objs[iRow][iCol] = 0;
+        oBall.dy = -oBall.dy;
+        if (len2)
+        {            
+            len2 = false;
+            oStricker.w /= 2;            
+        }
     }
     // reversing X cordinate
     if((oBall.x + oBall.dx + oBall.r) > ctx.canvas.width || (oBall.x + oBall.dx - oBall.r) < 0)    
@@ -117,7 +158,7 @@ $(function ()
     ctx = canvas.getContext("2d");
     width = canvas.getAttribute("width");
     height = canvas.getAttribute("height");
-    oStricker = new Stricker((width / 2) - 74, 575, 148, 20);
+    oStricker = new Stricker((width / 2) - 74, 575, 147, 20);
     oBall = new Ball((width / 2), 565, 0.5, -2, 10);
     oBricks = new Bricks((width / 10), 40, 8, 10);
     oBricks.objs = new Array(oBricks.r);
@@ -143,6 +184,17 @@ $(function ()
         {
             i--;
         }
+
+        if (i == 18 && good)
+        {
+            good = false
+            oBricks.objs[rRow][rCol] = 2;
+        }
+        if (i == 20 && bad)
+        {
+            bad = false;
+            oBricks.objs[rRow][rCol] = 3;
+        }
     }
     //drawGame();
     // main functionality
@@ -156,6 +208,40 @@ $(function ()
         {
             oStricker.x = Math.max(e.pageX - iCanX1 - (oStricker.w / 2), 0);
             oStricker.x = Math.min(ctx.canvas.width - oStricker.w, oStricker.x);
+        }
+    });
+
+    // binding ball movement with keybourd
+    $(window).keydown(function (e)
+    {
+        switch (e.keyCode)
+        {
+            case 37:
+                {
+                    left = true;
+                    break;
+                }
+            case 39:
+                {
+                    right = true;
+                    break;
+                }
+        }
+    });
+    $(window).keyup(function (e)
+    {
+        switch (e.keyCode)
+        {
+            case 37:
+                {
+                    left = false;
+                    break;
+                }
+            case 39:
+                {
+                    right = false;
+                    break;
+                }
         }
     });
 });
